@@ -1,0 +1,16 @@
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <polygon points="130,60 167,40 167,101" fill="#006917" stroke="#006917" stroke-width="6" />
+   <defs>
+    <radialGradient id="gradiente" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="50%" stop-color="transparent" />
+      <stop offset="50%" stop-color="#03bb2b" />
+      <stop offset="100%" stop-color="#006917" />
+    </radialGradient>
+  </defs>
+   <circle cx="100" cy="100" r="70" fill="url(#gradiente)" stroke="#006917" />
+   <text x="50%" y="190" dominant-baseline="middle" text-anchor="middle"
+        font-size="30" font-family="Montserrat, sans-serif" font-weight="bold" fill="#2c2c2c"
+        stroke-width="2" text-shadow="2px 2px 2px rgba(0,0,0,0.5)">
+    Crédito Fácil
+  </text>
+</svg>

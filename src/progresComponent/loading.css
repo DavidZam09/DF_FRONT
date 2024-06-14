@@ -1,0 +1,25 @@
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .loading-spinner {
+    width: 100px;
+    height: 100px;
+    background-image: url('../logo.svg'); /* Asegúrate de usar la ruta correcta a tu imagen */
+    background-size: contain;
+    background-repeat: no-repeat;
+    animation: spin 2s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  

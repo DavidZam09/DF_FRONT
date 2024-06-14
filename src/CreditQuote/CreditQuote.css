@@ -1,0 +1,64 @@
+h2,
+h3 {
+    text-align: center;
+    color: green;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    align-items: center;
+}
+
+table,
+th,
+td {
+    border: 1px solid #ddd;
+}
+
+th,
+td {
+    padding: 0.5rem;
+    text-align: left;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+
+.input-label:nth-child(even) {
+    order: 1;
+}
+
+.data-window p {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+.client-form-container{
+    overflow-y: auto;
+}
+.toast-info-custom{
+    background-color: #007bff;
+}
+.credit-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex: 1 1 300px;
+}
+
+.credit-card h3 {
+    margin-top: 0;
+}
+
+.credit-card p {
+    margin: 4px 0;
+}

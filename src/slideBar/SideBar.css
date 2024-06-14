@@ -1,0 +1,140 @@
+.sidebar-content {
+    margin-top: 15px;
+    max-height: 100%;
+    color: #000000;
+    background-color: #ffffff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    z-index: 1000;
+}
+
+.menu-toggle {
+    margin: 5px;
+    top: 30px;
+    left: 20px;
+    z-index: 1000;
+    cursor: pointer;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    position: relative;
+    z-index: 999;
+}
+
+.sidebar-button {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+.sidebar-button:hover {
+    background-color: #036117;
+    color: #fff;
+}
+
+.button-icon {
+    margin-right: 10px;
+}
+
+.button-label {
+    font-size: 16px;
+}
+
+.titleMenu {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.formContainer {
+    margin: 5%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    width: 150px;
+    color: #54b369;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.App-header {
+    background-color: #03bb2b;
+    padding: 1.5rem;
+    display: flex;
+    max-height: 100%;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+
+.content {
+    margin-top: 50px;
+    padding: 20px;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.progress-circle {
+    transition: stroke-dashoffset 0.5s ease;
+}
+
+
+.data-window {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    background-color: white;
+    padding: 2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    outline: none;
+    border-radius: 8px;
+    margin: 2rem auto;
+    overflow-y: auto;
+}
+
+.button-container button {
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    margin-left: 3rem;
+    background-color: #03bb2b;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer
+}
+
+.button-container button:hover {
+    background-color: #014711;
+}
+
+.page-title {
+    margin: 5px;
+    top: 0;
+    left: 20%;
+    right: 20%;
+    display: flex;
+    justify-content: center;
+    text-align: justify;
+    position: absolute;
+    z-index: 1001;
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+}

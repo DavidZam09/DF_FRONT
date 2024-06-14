@@ -1,0 +1,14 @@
+.titleHeader {
+  background-color: green;
+  width: 100%;
+}
+
+.img {
+  justify-content: center;
+  position: fixed;
+  text-align: center;
+  top: 30%;
+  left: 40%;
+  align-items: center;
+  display: flex;
+}

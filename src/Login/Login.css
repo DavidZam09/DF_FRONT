@@ -1,0 +1,10 @@
+.container{
+    background-size: cover;
+    background-position: center;
+    background-color: #f0f0f0;
+}
+.passreset{
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}

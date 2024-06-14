@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Primer engranaje -->
+  <g transform="translate(50,100)">
+    <circle cx="0" cy="0" r="40" fill="#006917">
+      <animate attributeName="fill" values="#03bb2b; #006917; #54b369" dur="6s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="0" cy="0" r="30" fill="#fff" />
+    <g>
+      <rect x="-5" y="-25" width="10" height="50" fill="#006917">
+        <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="2s" repeatCount="indefinite" />
+      </rect>
+      <rect x="-5" y="-25" width="10" height="50" fill="#006917">
+        <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="-360 0 0" dur="3s" repeatCount="indefinite" />
+      </rect>
+    </g>
+  </g>
+  <!-- Segundo engranaje -->
+  <g transform="translate(150,100)">
+    <circle cx="0" cy="0" r="40" fill="#03bb2b">
+      <animate attributeName="fill" values="#03bb2b; #006917; #54b369" dur="6s" repeatCount="indefinite" />
+    </circle>
+    <circle cx="0" cy="0" r="30" fill="#fff" />
+    <g>
+      <rect x="-5" y="-25" width="10" height="50" fill="#006917">
+        <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="-360 0 0" dur="2s" repeatCount="indefinite" />
+      </rect>
+      <rect x="-5" y="-25" width="10" height="50" fill="#006917">
+        <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="3s" repeatCount="indefinite" />
+      </rect>
+    </g>
+  </g>
+</svg>
