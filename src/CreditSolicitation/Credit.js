@@ -175,7 +175,7 @@ const SolicitedCredit = ({ onClose }) => {
                     </div>
 
                     <div className='button-container'>
-                        <button type="submit" disabled={isLoading}>{isLoading ? 'Loading...' : 'Submit'}</button>
+                        <button type="submit" disabled={isLoading}>{isLoading ? 'Cargando...' : 'Enviar'}</button>
 
                         <button type="button" onClick={onClose}>Cerrar</button>
 
