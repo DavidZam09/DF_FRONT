@@ -8,7 +8,7 @@ function SelectCreditValue({ onValueChange, defaultParam }) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/creditos/lista_credito_cotizacion');
+                const response = await axios.get('http://192.168.20.23:3000/creditos/lista_credito_cotizacion');
                 setData(response.data.data); // Acceder a response.data.data para obtener la lista de tipos de documento
             } catch (error) {
                 console.error('Error fetching data:', error);

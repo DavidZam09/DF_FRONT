@@ -1,163 +1,153 @@
-/* Fondo semitransparente */
-.modal-overlay {
+/* Overlay for modal backgrounds */
+.modal-overlay, .modal-overlay2 {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.75);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Contenedor del modal */
-.profile-container {
-    position: relative;
-    width: 80%;
-    max-width: 500px;
-    max-height: 80%;
-    background-color: white;
-    padding: 20px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    z-index: 1000;
-    outline: none;
-    border-radius: 8px;
-    overflow-y: auto;
-    scrollbar-color: #03bb2b #f1f1f1;
-    scrollbar-width: thin;
-    align-items: center;
-    justify-content: center;
-}
-
-.button-container {
-    display: flex;
-}
-
-.button-container button {
-    display: flex;
-    left: 1¿0.5rem;
-}
-
-/* Estilos adicionales para el modal */
-.profile-details {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.profile-section {
-    margin-bottom: 20px;
-}
-
-.profile-section h3 {
-    margin-bottom: 10px;
-    font-size: 1.2em;
-    color: #333;
-}
-
-.profile-section p {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    margin: 0;
-    word-wrap: break-word;
-}
-
-.profile-section p strong {
-    margin-bottom: 5px;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="date"],
-input[type="number"] {
     width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    overflow: auto; /* Ensure content can scroll vertically */
 }
 
-.client-photo {
-    width: 100px;
-
-    height: 100px;
-
-    border-radius: 50%;
-
-    object-fit: cover;
-
-    border: 2px solid #fff;
+/* Container for profile and modal content */
+.profile-container, .modal {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 800px;
+    overflow-y: auto;
+    max-height: 90%;
+    box-sizing: border-box; /* Ensure padding and border are included in width and height */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content horizontally */
 }
 
+/* Main heading styles */
+.profile-container h2, .modal h2 {
+    color: #54b369;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Photo section and image styling */
 .photo-section {
     text-align: center;
     margin-bottom: 20px;
 }
 
-.modal1 {
-    display: grid;
-    position: relative;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 500px;
-    max-height: 80%;
-    background-color: white;
-    padding: 20px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    z-index: 1002;
-    outline: none;
-    border-radius: 8px;
-    overflow-y: auto;
+.client-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 3px solid #54b369;
 }
 
-.modal-overlay2 {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.75);
+/* Details section layout */
+.profile-details {
     display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%; /* Ensure profile details take full width */
 }
 
+/* Individual section styles */
+.profile-section {
+    flex: 1 1 calc(50% - 20px);
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box; /* Ensure padding and border are included in width and height */
+}
 
-.step-title {
+/* Section heading styles */
+.profile-section h3 {
+    color: #54b369;
     margin-bottom: 10px;
-    font-size: 1.2em;
-    color: #333;
 }
 
-.modal1 button {
-    margin-top: 10px;
+/* Paragraph styling within sections */
+.profile-section p {
+    margin: 5px 0;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap; /* Ensure text wraps properly on small screens */
 }
 
-
+/* Container for fields */
 .field-container {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    width: 100%;
 }
 
+/* Input field styling */
 .field-container input {
-    flex: 1;
+    flex: 1; /* Ensure input fields take available space */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-left: 10px;
 }
 
-.field-container .edit-button {
-    margin-left: 8px;
-    color: #03bb2b;
-    cursor: pointer;
+/* Edit button styling */
+.edit-button {
     background: none;
     border: none;
+    color: #54b369;
+    cursor: pointer;
+    font-size: 16px;
 }
 
-.field-container-client .edit-button {
-    cursor: pointer;
-    background: none;
-    border: none;
+.edit-button:hover {
     color: #03bb2b;
 }
+
+/* Container for buttons */
+.button-container {
+    display: flex;
+    justify-content: center; /* Center buttons horizontally */
+    gap: 10px; /* Space between buttons */
+    flex-wrap: wrap; /* Ensure buttons wrap on smaller screens */
+    margin-top: 20px;
+}
+
+/* Button styling */
+button {
+    background-color: #54b369;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #03bb2b;
+}
+
+/* Modal specific styling */
+.modal {
+    padding: 30px;
+    max-width: 500px;
+    width: 100%; /* Ensure modal takes full width on small screens */
+    box-sizing: border-box; /* Ensure padding and border are included in width and height */
+}
+
+/* Step title styling */
+.step-title {
+    margin-bottom: 20px;
+    color: #54b369;
+    text-align: center;
+}
+

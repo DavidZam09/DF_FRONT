@@ -34,9 +34,9 @@ const Profile = ({ onClose }) => {
   }, []);
 
   const { data: client, loading: clientLoading, error: clientError } = useFetchData(
-    id ? `http://localhost:3000/cliente_info/lista_cliente_infoxcliente?id=${id}` : null
+    id ? `http://192.168.20.23:3000/cliente_info/lista_cliente_infoxcliente?id=${id}` : null
   );
-  const photoUrl = `http://localhost:3000/documento/get_doc?doc=${client?.[0]?.foto_cliente}`;
+  const photoUrl = `http://192.168.20.23:3000/documento/get_doc?doc=${client?.[0]?.foto_cliente}`;
   const { photoData, loading: photoLoading, error: photoError } = useFetchPhoto(photoUrl);
   const handleCapture = (field, blob) => {
     setClientData((prevData) => ({
@@ -90,7 +90,7 @@ const Profile = ({ onClose }) => {
         data.append(key, clientData[key]);
       });
 
-      const response = await axios.post('http://localhost:3000/cliente_info/input_cliente_info', data, {
+      const response = await axios.post('http://192.168.20.23:3000/cliente_info/input_cliente_info', data, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -242,10 +242,16 @@ const Profile = ({ onClose }) => {
           {photoData && !photoLoading && (
             <img src={photoData} alt="Foto del cliente" className="client-photo" />
           )}
-          Codigo Personal: {codPersonal}
+
         </div>
         <div className="profile-details">
+
           <div className="profile-section">
+            <p >
+
+              <strong>Codigo Personal:</strong>
+              {codPersonal}
+            </p>
             <p >
               <strong>Nombres:</strong>
               {renderField('nombres_cliente', `${clientData.nombres_cliente}`)}
@@ -329,15 +335,14 @@ const Profile = ({ onClose }) => {
             </p>
           </div>
         </div>
-        <div className="button-container">
-          {hasChanges && (<button type="button" onClick={handleConfirm}>Guardar</button>)}
-          <button type="button" onClick={onClose}>Cerrar</button>
-
-        </div>
-        <div className="button-container">
-          {enable && (
-            <button type="button" onClick={handleEditDocuments}>Editar Documentos</button>
-          )}
+        <div className="profile-section">
+          <div className="button-container">
+            {hasChanges && (<button type="button" onClick={handleConfirm}>Guardar</button>)}
+            <button type="button" onClick={onClose}>Cerrar</button>
+            {enable && (
+              <button type="button" onClick={handleEditDocuments}>Editar Documentos</button>
+            )}
+          </div>
         </div>
       </div>
       {isEditingDocuments && (

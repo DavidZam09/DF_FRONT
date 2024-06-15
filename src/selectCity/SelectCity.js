@@ -9,7 +9,7 @@ function SelectDpartmetAndCity({ onDepartmentChange, onCityChange, defaultDepart
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/cliente_info/dptxciudades');
+                const response = await axios.get('http://192.168.20.23:3000/cliente_info/dptxciudades');
                 setData(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);

@@ -33,7 +33,7 @@ const Register = () => {
         const queryString = `cod_referido=${formData.cod_referido}&email=${formData.email}&password=${formData.password}&num_celular=${formData.num_celular}`;
 
         try {
-            const response = await fetch(`http://localhost:3000/clientes/registrar_cliente?${queryString}`);
+            const response = await fetch(`http://192.168.20.23:3000/clientes/registrar_cliente?${queryString}`);
             const responseData = await response.json();
 
             if (responseData.successful) {

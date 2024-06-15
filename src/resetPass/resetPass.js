@@ -19,7 +19,7 @@ const ChangePassword = () => {
     const [showAlert, setShowAlert] = useState(false);
     const handleEmailVerification = async (event) => {
         event.preventDefault();
-        const url = `http://localhost:3000/clientes/val_correo_cliente?email=${email}`;
+        const url = `http://192.168.20.23:3000/clientes/val_correo_cliente?email=${email}`;
         const method = 'GET';
         const successMessage = "Se ha generado y enviado el codigo al correo del cliente"
 
@@ -47,7 +47,7 @@ const ChangePassword = () => {
             return;
         }
 
-        const url = 'http://localhost:3000/clientes/cambio_pass';
+        const url = 'http://192.168.20.23:3000/clientes/cambio_pass';
         const method = 'POST';
         const body = formData;
         const successMessage = "Se cambio la contraseña para el usuario"

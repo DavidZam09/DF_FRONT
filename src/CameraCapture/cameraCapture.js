@@ -8,12 +8,25 @@ const CameraCapture = ({ onCapture, onNext }) => {
   const [previewUrl, setPreviewUrl] = useState(null);
 
   const startCamera = async () => {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert('Your browser does not support accessing the camera.');
+      return;
+    }
+
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const constraints = {
+        video: {
+          facingMode: 'user', // Use 'environment' for rear camera
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        },
+      };
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
       videoRef.current.srcObject = stream;
       setIsCameraOn(true);
     } catch (error) {
       console.error('Error accessing the camera:', error);
+      alert('Error accessing the camera: ' + error.message);
     }
   };
 
@@ -48,8 +61,10 @@ const CameraCapture = ({ onCapture, onNext }) => {
 
   const stopCamera = () => {
     const stream = videoRef.current.srcObject;
-    const tracks = stream.getTracks();
-    tracks.forEach((track) => track.stop());
+    if (stream) {
+      const tracks = stream.getTracks();
+      tracks.forEach((track) => track.stop());
+    }
     setIsCameraOn(false);
   };
 
@@ -81,7 +96,7 @@ const CameraCapture = ({ onCapture, onNext }) => {
       </div>
       {!isCameraOn && <button onClick={startCamera} style={{ marginTop: '10px', padding: '8px 16px', borderRadius: '8px', background: '#4caf50', color: 'white', border: 'none', cursor: 'pointer' }}>Start Camera</button>}
       {isCameraOn && <button onClick={capturePhoto} style={{ marginTop: '10px', padding: '8px 16px', borderRadius: '8px', background: '#f44336', color: 'white', border: 'none', cursor: 'pointer' }}>Capture Photo</button>}
-      {previewUrl && <button onClick={handleNext} style={{ marginTop: '10px', marginLeft: '40%',padding: '8px 16px', borderRadius: '8px', background: '#4caf50', color: 'white', border: 'none', cursor: 'pointer' }}>Siguiente</button>}
+      {previewUrl && <button onClick={handleNext} style={{ marginTop: '10px', marginLeft: '40%', padding: '8px 16px', borderRadius: '8px', background: '#4caf50', color: 'white', border: 'none', cursor: 'pointer' }}>Siguiente</button>}
     </div>
   );
 };

@@ -203,7 +203,7 @@ const ClientForm = ({ onClose }) => {
                 console.log('Respuesta del servicio:', responseData.data);
                 toast.success('Formulario enviado correctamente');
                 setFormulario(initialFormState);
-                window.location.reload();
+                navigate('/');
             } else {
                 console.error('Error en el envío del formulario:', responseData.errors);
                 toast.error('Ocurrió un error al enviar el formulario: ' + responseData.errors.join(', '));

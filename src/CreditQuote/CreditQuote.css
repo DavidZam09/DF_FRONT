@@ -40,19 +40,18 @@ th {
     font-size: 16px;
     box-sizing: border-box;
 }
-.client-form-container{
+
+.client-form-container {
     overflow-y: auto;
 }
-.toast-info-custom{
+
+.toast-info-custom {
     background-color: #007bff;
 }
+
 .credit-card {
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 16px;
-    margin: 16px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     flex: 1 1 300px;
+    z-index: 1001;
 }
 
 .credit-card h3 {
@@ -61,4 +60,17 @@ th {
 
 .credit-card p {
     margin: 4px 0;
+}
+
+.table-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.table-cuotas {
+    width: 100%;
+    max-width: 600px;
+    border-collapse: collapse;
+    text-align: left;
 }

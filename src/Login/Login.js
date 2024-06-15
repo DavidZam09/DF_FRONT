@@ -14,7 +14,7 @@ const Login = () => {
 
     const handleConfirm = async (event) => {
         event.preventDefault();
-        const url = 'http://localhost:3000/clientes/login_cliente';
+        const url = 'http://192.168.20.23:3000/clientes/login_cliente';
         const method = 'POST';
         const body = { email, password };
         const successMessage = 'Hola! Bienvenido';

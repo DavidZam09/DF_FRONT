@@ -103,29 +103,3 @@
     font-size: 16px;
     box-sizing: border-box;
 }
-
-/* Estilos para los botones */
-.button-container {
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    display: flex;
-    padding: 2rem;
-    margin-right: 1rem;
-}
-
-.button-container button { 
-    background-color: #03bb2b;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer
-}
-
-.button-container button:hover {
-    background-color: #014711;
-}
-
-.button-container:nth-child(even) {
-    order: 1;
-}

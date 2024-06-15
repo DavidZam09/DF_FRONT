@@ -89,7 +89,7 @@ const SidebarMenu = () => {
             try {
                 const clientId = localStorage.getItem('id');
                 if (clientId) {
-                    const response = await axios.get(`http://localhost:3000/cliente_info/lista_cliente_infoxcliente?id=${clientId}`);
+                    const response = await axios.get(`http://192.168.20.23:3000/cliente_info/lista_cliente_infoxcliente?id=${clientId}`);
                     setClientExists(response.data.successful);
                 }
             } catch (error) {

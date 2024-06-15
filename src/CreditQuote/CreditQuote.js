@@ -29,7 +29,7 @@ const CreditQuote = ({ onClose }) => {
         const queryString = `id=${formulario.id}&num_cuotas=${formulario.numCuotas}&fec_desembolso=${formulario.fecDesembolso}`;
 
         try {
-            const response = await axios.get(`http://localhost:3000/creditos/cotizacion_credito?${queryString}`);
+            const response = await axios.get(`http://192.168.20.23:3000/creditos/cotizacion_credito?${queryString}`);
             if (response.data && response.data.successful) {
                 setCreditData(response.data.data);
                 setShowAlert(false);
@@ -40,10 +40,12 @@ const CreditQuote = ({ onClose }) => {
         } catch (error) {
             console.error('Error fetching credit data:', error);
             setShowAlert(true);
+
         }
     };
     const handleopenview = () => {
         setviewQuote(true);
+        setCreditData(null);
     }
     function formatCurrency(value) {
         // Formatea el valor con el signo de pesos y separadores de miles
@@ -117,7 +119,7 @@ const CreditQuote = ({ onClose }) => {
 
                         </div>
                         <div>
-                            <SelectCreditValue onValueChange={handleSelectedChange} defaultParam={formulario.id}/>
+                            <SelectCreditValue onValueChange={handleSelectedChange} defaultParam={formulario.id} />
                         </div>
                         <div className='button-container'>
                             <button type="submit">Enviar</button>
@@ -132,7 +134,7 @@ const CreditQuote = ({ onClose }) => {
     return (<div className='data-window'>
         {showAlert && <AlertMsg message="Hubo un problema al obtener los datos del crédito." />}
         {creditData && (
-            <div >
+            <div className='credit-card'>
                 <h2>Cotizacion de Crédito</h2>
                 <table>
                     <tbody>
@@ -167,28 +169,30 @@ const CreditQuote = ({ onClose }) => {
                     </tbody>
                 </table>
                 <h3>Cuotas</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>N°</th>
-                            <th>Monto</th>
-                            <th>Interés</th>
-                            <th>Subtotal</th>
-                            <th>Fecha de Pago</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {creditData.cuotas.map((cuota, index) => (
-                            <tr key={index}>
-                                <td>{cuota.n_cuota}</td>
-                                <td>{formatCurrency(cuota.cuota)}</td>
-                                <td>{formatCurrency(cuota.interes)}</td>
-                                <td>{formatCurrency(cuota.subtotal)}</td>
-                                <td>{new Date(cuota.fecha_pago_cuota).toLocaleDateString()}</td>
+                <div className="table-container">
+                    <table className='table-cuotas'>
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>Monto</th>
+                                <th>Interés</th>
+                                <th>Subtotal</th>
+                                <th>Fecha de Pago</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {creditData.cuotas.map((cuota, index) => (
+                                <tr key={index}>
+                                    <td>{cuota.n_cuota}</td>
+                                    <td>{formatCurrency(cuota.cuota)}</td>
+                                    <td>{formatCurrency(cuota.interes)}</td>
+                                    <td>{formatCurrency(cuota.subtotal)}</td>
+                                    <td>{new Date(cuota.fecha_pago_cuota).toLocaleDateString()}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
                 <div className='button-container'>
                     <button type="button" onClick={handleopenview}>Atrás</button>
                 </div>
