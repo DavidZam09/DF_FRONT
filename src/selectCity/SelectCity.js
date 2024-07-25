@@ -8,8 +8,15 @@ function SelectDpartmetAndCity({ onDepartmentChange, onCityChange, defaultDepart
 
     useEffect(() => {
         const fetchData = async () => {
+            const token = localStorage.getItem('token');
             try {
-                const response = await axios.get('http://192.168.20.23:3000/cliente_info/dptxciudades');
+                const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER}/cliente_info/dptxciudades`,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                        },
+                    }
+                );
                 setData(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);

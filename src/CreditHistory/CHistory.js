@@ -29,10 +29,10 @@ const CreditHistory = ({ onClose }) => {
     }, []);
 
     const { data: creditos, loading: creditosLoading, error: creditosError } = useFetchData(
-        id ? `http://192.168.20.23:3000/creditos/historial_creditos?id=${id}` : null
+        id ? `${process.env.REACT_APP_BACKEND_SERVER}/creditos/historial_creditos?id=${id}` : null
     );
 
-    const { data: estadosPago } = useFetchData('http://192.168.20.23:3000/creditos/lista_credito_estados');
+    const { data: estadosPago } = useFetchData(`${process.env.REACT_APP_BACKEND_SERVER}/creditos/lista_credito_estados`);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -40,7 +40,7 @@ const CreditHistory = ({ onClose }) => {
                 const allCuotas = [];
                 for (const credit of creditos) {
                     try {
-                        const response = await axios.get(`http://192.168.20.23:3000/creditos/lista_credito_pago?id=${credit.id}`);
+                        const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER}/creditos/lista_credito_pago?id=${credit.id}`);
                         if (response.data && response.data.successful) {
                             const cuotas = response.data.data;
                             const cuota = cuotas.find(cuota => cuota.id_credito_pago_estado === 1);
@@ -73,7 +73,7 @@ const CreditHistory = ({ onClose }) => {
     };
 
     const fetchCuotasPago = (creditoId) => {
-        axios.get(`http://192.168.20.23:3000/creditos/lista_credito_pago?id=${creditoId}`)
+        axios.get(`${process.env.REACT_APP_BACKEND_SERVER}/creditos/lista_credito_pago?id=${creditoId}`)
             .then(response => {
                 if (response.data && response.data.successful) {
                     setCuotasPago(response.data.data);
@@ -106,7 +106,7 @@ const CreditHistory = ({ onClose }) => {
 
     const fetchCuotaId = async (creditoId) => {
         try {
-            const response = await axios.get(`http://192.168.20.23:3000/creditos/lista_credito_pago?id=${creditoId}`);
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER}/creditos/lista_credito_pago?id=${creditoId}`);
             if (response.data && response.data.successful) {
                 const cuota = response.data.data.find(cuota => cuota.id_credito_pago_estado === 1);
                 setSelectedCuotaId(cuota ? cuota.id : null);
@@ -133,7 +133,7 @@ const CreditHistory = ({ onClose }) => {
         formData.append('soporte_pago', soportePago);
 
         try {
-            const response = await axios.post('http://192.168.20.23:3000/creditos/update_credito_pagoxcliente', formData, {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_SERVER}/creditos/update_credito_pagoxcliente`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             if (response.data && response.data.successful) {
@@ -280,7 +280,7 @@ const CreditHistory = ({ onClose }) => {
                                             <td>{cuota.fecha_pago ? formatDate(cuota.fecha_pago) : 'No Pagado'}</td>
                                             <td>
                                                 {cuota.soporte_pago ? (
-                                                    <a href={`http://192.168.20.23:3000/documento/get_doc?doc=${cuota.soporte_pago}`} target="_blank" rel="noopener noreferrer">
+                                                    <a href={`http://192.168.1.17:3000/documento/get_doc?doc=${cuota.soporte_pago}`} target="_blank" rel="noopener noreferrer">
                                                         Ver Soporte
                                                     </a>
                                                 ) : (

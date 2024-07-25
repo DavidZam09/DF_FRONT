@@ -42,12 +42,15 @@ const ClientForm = ({ onClose }) => {
         foto_pago_nomina: null,
         id: '',
     };
+
     const navigate = useNavigate();
     const [termsContent, setTermsContent] = useState('');
     const [step, setStep] = useState(1);
     const [formulario, setFormulario] = useState(initialFormState);
-    const [activityOptions, setActivityOptions] = useState([]);
-    const [sectorOptions, setSectorOptions] = useState([]);
+    const [activityOptions, setActivityOptions] = useState(false);
+    const [sectorOptions, setSectorOptions] = useState(false);
+    const [errors, setErrors] = useState({});
+    const [otherValue, setOtherValue] = useState('');
 
     useEffect(() => {
         const clientId = localStorage.getItem('id');
@@ -58,6 +61,15 @@ const ClientForm = ({ onClose }) => {
             }));
         }
     }, []);
+
+    const handleRedirect = () => {
+        localStorage.clear();
+        navigate('/login');
+    };
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        handleRedirect();
+    };
 
     useEffect(() => {
         const fetchTerms = async () => {
@@ -81,6 +93,7 @@ const ClientForm = ({ onClose }) => {
                     ...formulario,
                     [name]: type === 'checkbox' ? (checked ? 'SI' : 'NO') : cleanValue,
                 });
+                setErrors({ ...errors, [name]: false });
             }
         } else {
             if (id === 'direccion') {
@@ -88,95 +101,85 @@ const ClientForm = ({ onClose }) => {
                     ...formulario,
                     [name]: type === 'checkbox' ? (checked ? 'SI' : 'NO') : value,
                 });
+                setErrors({ ...errors, [name]: false });
             }
             else if (validateFields2(name, value, id)) {
                 setFormulario({
                     ...formulario,
                     [name]: type === 'checkbox' ? (checked ? 'SI' : 'NO') : value,
                 });
+                setErrors({ ...errors, [name]: false });
+            }
+            else {
+                setErrors({ ...errors, [name]: true });
             }
         }
+
     };
 
     const handleSelectedChange = (field, value) => {
         let otroSectorActividad = formulario.otro_sector_y_actividad;
-        let tempValue = value;
+
         if (field === 'id_cliente_actividad_eco' || field === 'id_cliente_sector_eco') {
 
             if (field === 'id_cliente_actividad_eco' && value === '22') {
-                const actividad = activityOptions.find(opt => opt.id === 22)?.nombre_actividad || '';
-                otroSectorActividad = actividad ? actividad : otroSectorActividad;
-                console.log("estos son los valores: " + field + " " + value + " " + otroSectorActividad)
-                setFormulario(prevFormulario => ({
-                    ...prevFormulario,
-                    id_cliente_actividad_eco: '22',
-                    otro_sector_y_actividad: otroSectorActividad
-                }));
-
-            } else {
-                setFormulario(prevFormulario => ({
-                    ...prevFormulario,
-                    [field]: value,
-                }));
+                setActivityOptions(true);
             }
             if (field === 'id_cliente_sector_eco' && value === '14') {
-                const sector = sectorOptions.find(opt => opt.id === 14)?.nombre_sector_eco || '';
-                otroSectorActividad = sector ? (otroSectorActividad ? `${otroSectorActividad} - ${sector}` : sector) : otroSectorActividad;
-                console.log("estos son los valores: " + field + " " + value + " " + otroSectorActividad)
-                setFormulario(prevFormulario => ({
-                    ...prevFormulario,
-                    id_cliente_sector_eco: '14',
-                    otro_sector_y_actividad: otroSectorActividad
-
-                }));
-            } else {
-                setFormulario(prevFormulario => ({
-                    ...prevFormulario,
-                    [field]: value,
-                }));
+                setSectorOptions(true);
             }
-        } else {
-            otroSectorActividad = tempValue;
-            setFormulario(prevFormulario => ({
-                ...prevFormulario,
-                [field]: value,
-            }));
         }
+        setFormulario(prevFormulario => ({
+            ...prevFormulario,
+            [field]: value,
+        }));
         console.log("estos son los valores: " + field + " " + value + " " + otroSectorActividad)
+        setErrors({ ...errors, [field]: false });
     };
-
 
     const handleNextStep = () => setStep(step + 1);
     const handleBackStep = () => setStep(step - 1);
 
     const validateFields = (requiredFields) => {
+        let isValid = true;
+        let newErrors = { ...errors };
         for (let field of requiredFields) {
             if (!formulario[field]) {
+                newErrors[field] = true;
+                isValid = false;
                 toast.info(`Por favor, diligencie el campo ${field.replace('_', ' ')}.`);
-                return false;
+            } else {
+                newErrors[field] = false;
             }
         }
-        return true;
+        setErrors(newErrors);
+        return isValid;
     };
 
+
     const validateFields2 = (name, value, id) => {
+        let isValid = true;
+        let newErrors = { ...errors };
         if (value) {
             if (id !== 'number') {
                 if (/\d/.test(value)) {
                     toast.info(`El campo "${name.replace('_', ' ')}" no puede contener números.`);
-                    return false;
+                    newErrors[name] = false;
+                    isValid = false;
                 }
             } else {
                 if (!/^\d+$/.test(value)) {
                     toast.info(`El campo "${name.replace('_', ' ')}" solo puede contener números.`);
-                    return false;
+                    newErrors[name] = true;
+                    isValid = false;
                 }
             }
         }
-        return true;
+
+        setErrors(newErrors);
+        return isValid;
     };
- 
-    
+
     const handleFormContinue = (event, requiredFields) => {
         event.preventDefault();
         if (validateFields(requiredFields)) {
@@ -190,16 +193,18 @@ const ClientForm = ({ onClose }) => {
             Object.keys(formulario).forEach((key) => {
                 data.append(key, formulario[key]);
             });
+            const token = localStorage.getItem('token');
 
-            const response = await axios.post('http://localhost:3000/cliente_info/input_cliente_info', data, {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_SERVER}/cliente_info/input_cliente_info`, data, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
+                    'Authorization': `bearer ${token}`,
                 },
             });
 
             const responseData = response.data;
 
-            if (responseData.successful) {
+            if (response.successful) {
                 console.log('Respuesta del servicio:', responseData.data);
                 toast.success('Formulario enviado correctamente');
                 setFormulario(initialFormState);
@@ -213,14 +218,12 @@ const ClientForm = ({ onClose }) => {
             toast.error('Ocurrió un error al enviar el formulario');
         }
     };
-
     const handleCapture = (field, blob) => {
         setFormulario((prevFormulario) => ({
             ...prevFormulario,
             [field]: blob,
         }));
         console.log(blob);
-
     };
 
     const formatCurrency = (value) => {
@@ -234,18 +237,22 @@ const ClientForm = ({ onClose }) => {
                     <form className='form-terms'>
                         <h1 className="step-title">Términos y Condiciones</h1>
                         <p>{termsContent}</p>
-                        <label>
+                        <label className={errors.terminos_y_condiciones ? 'input-invalid' : ''}>
                             <input
                                 type="checkbox"
                                 name="terminos_y_condiciones"
                                 checked={formulario.terminos_y_condiciones === 'SI'}
                                 onChange={handleInputChange}
+
                             />
                             He leído y acepto los términos y condiciones
                         </label>
                         <div className="button-container">
-                            <button type="button" onClick={() => formulario.terminos_y_condiciones ? handleNextStep() : toast.info('Por favor, acepta los términos y condiciones para continuar.')}>
+                            <button type="button" onClick={() => formulario.terminos_y_condiciones === 'SI' ? handleNextStep() : toast.info('Por favor, acepta los términos y condiciones para continuar.')}>
                                 Continuar
+                            </button>
+                            <button type="button" onClick={handleLogout}>
+                                Cerrar 
                             </button>
                         </div>
                     </form>
@@ -256,11 +263,11 @@ const ClientForm = ({ onClose }) => {
                         <h2 className="step-title">Datos Personales</h2>
                         <label className="input-label">
                             Nombres:
-                            <input type="text" name="nombres_cliente" value={formulario.nombres_cliente} onChange={handleInputChange} required />
+                            <input type="text" id='nombres_cliente' name="nombres_cliente" value={formulario.nombres_cliente} onChange={handleInputChange} form-content style={{ borderColor: errors['nombres_cliente'] ? 'red' : '#ccc' }} />
                         </label>
                         <label className="input-label">
                             Apellidos:
-                            <input type="text" name="apellidos_cliente" value={formulario.apellidos_cliente} onChange={handleInputChange} required />
+                            <input type="text" name="apellidos_cliente" id='apellidos_cliente' value={formulario.apellidos_cliente} onChange={handleInputChange} form-content style={{ borderColor: errors['apellidos_cliente'] ? 'red' : '#ccc' }} />
                         </label>
                         <SelectDpartmetAndCity
                             onDepartmentChange={(value) => handleSelectedChange('dpto', value)}
@@ -270,12 +277,12 @@ const ClientForm = ({ onClose }) => {
                         />
                         <label className="input-label">
                             Dirección:
-                            <input type="text" name="direccion" id="direccion" value={formulario.direccion} onChange={handleInputChange} />
+                            <input type="text" name="direccion" id="direccion" value={formulario.direccion} onChange={handleInputChange} style={{ borderColor: errors['direccion'] ? 'red' : '#ccc' }} />
                         </label>
-                        <SelectDocType onDocChange={(value) => handleSelectedChange('id_user_tipo_doc', value)} defaultParam={formulario.id_user_tipo_doc} />
+                        <SelectDocType onDocChange={(value) => handleSelectedChange('id_user_tipo_doc', value)} defaultParam={formulario.id_user_tipo_doc} attribute={errors['id_user_tipo_doc'] ? 'red' : ''} />
                         <label className="input-label">
                             No. De documento:
-                            <input type="text" name="num_documento" id="number" value={formulario.num_documento} onChange={handleInputChange} required />
+                            <input type="text" name="num_documento" id="number" value={formulario.num_documento} onChange={handleInputChange} form-content style={{ borderColor: errors['num_documento'] ? 'red' : '#ccc' }} />
                         </label>
                         <label className="input-label">
                             Fecha de nacimiento
@@ -288,23 +295,24 @@ const ClientForm = ({ onClose }) => {
                 );
             case 3:
                 return (
-                    <form onSubmit={(e) => handleFormContinue(e, ['id_cliente_actividad_eco', 'id_cliente_sector_eco', 'ingreso_mesual', 'gasto_mensual'])} className='form-content'>
+                    <form onSubmit={(e) => handleFormContinue(e, ['id_cliente_actividad_eco', 'id_cliente_sector_eco', 'ingreso_mesual', 'gasto_mensual', 'nombre_empresa_labora'])} className='form-content'>
                         <h2 className="step-title">Datos laborales y financieros</h2>
                         <label className="input-label">
                             Empresa:
-                            <input type="text" name="nombre_empresa_labora" value={formulario.nombre_empresa_labora} onChange={handleInputChange} />
+                            <input type="text" name="nombre_empresa_labora" value={formulario.nombre_empresa_labora} onChange={handleInputChange} style={{ borderColor: errors['nombre_empresa_labora'] ? 'red' : '' }} />
                         </label>
                         <label className="input-label">
-                            <SelectActiveEco onActiveEcoChange={(value) => handleSelectedChange('id_cliente_actividad_eco', value)} />
-                            <SelectSectEco onSectEcoChange={(value) => handleSelectedChange('id_cliente_sector_eco', value)} />
+                            <SelectActiveEco onActiveEcoChange={(value) => handleSelectedChange('id_cliente_actividad_eco', value)} defaultParam={formulario.id_cliente_actividad_eco} />
+                            <SelectSectEco onSectEcoChange={(value) => handleSelectedChange('id_cliente_sector_eco', value)} attribute={errors['id_cliente_sector_eco'] ? 'red' : '#ccc'} defaultParam={formulario.id_cliente_sector_eco} />
+                            {sectorOptions && <input type="text" name="otro_sector_y_actividad" value={formulario.otro_sector_y_actividad} onChange={handleInputChange} style={{ borderColor: errors['otro_sector_y_actividad'] ? 'red' : '' }} />}
                         </label>
                         <label className="input-label">
                             ingresos mensuales:
-                            <input type="text" id="number" name="ingreso_mesual" value={formulario.ingreso_mesual ? formatCurrency(formulario.ingreso_mesual) : ''} onChange={handleInputChange} />
+                            <input type="text" id="number" name="ingreso_mesual" value={formulario.ingreso_mesual ? formatCurrency(formulario.ingreso_mesual) : ''} onChange={handleInputChange} style={{ borderColor: errors['ingreso_mesual'] ? 'red' : '#ccc' }} />
                         </label>
                         <label className="input-label">
                             gastos mensuales:
-                            <input type="text" id="number" name="gasto_mensual" value={formulario.gasto_mensual ? formatCurrency(formulario.gasto_mensual) : ''} onChange={handleInputChange} />
+                            <input type="text" id="number" name="gasto_mensual" value={formulario.gasto_mensual ? formatCurrency(formulario.gasto_mensual) : ''} onChange={handleInputChange} style={{ borderColor: errors['gasto_mensual'] ? 'red' : '#ccc' }} />
                         </label>
                         <div className="button-container">
                             <button type="submit">Siguiente</button>
@@ -317,15 +325,15 @@ const ClientForm = ({ onClose }) => {
                         <h2 className="step-title">Datos referencia 1</h2>
                         <label className="input-label">
                             Nombre completo:
-                            <input type="text" name="rf1_nombre_completo" value={formulario.rf1_nombre_completo} onChange={handleInputChange} />
+                            <input type="text" name="rf1_nombre_completo" value={formulario.rf1_nombre_completo} onChange={handleInputChange} style={{ borderColor: errors['rf1_nombre_completo'] ? 'red' : '#ccc' }} />
                         </label>
                         <label className="input-label">
                             Telefono:
-                            <input type="text" id="number" name="rf1_num_celular" value={formulario.rf1_num_celular} onChange={handleInputChange} />
+                            <input type="text" id="number" name="rf1_num_celular" value={formulario.rf1_num_celular} onChange={handleInputChange} style={{ borderColor: errors['rf1_num_celular'] ? 'red' : '#ccc' }} />
                         </label>
                         <label className="input-label">
                             Direccion:
-                            <input type="text" name="rf1_direccion" id="direccion" value={formulario.rf1_direccion} onChange={handleInputChange} />
+                            <input type="text" name="rf1_direccion" id="direccion" value={formulario.rf1_direccion} onChange={handleInputChange} style={{ borderColor: errors['rf1_direccion'] ? 'red' : '#ccc' }} />
                         </label>
                         <div className="button-container">
                             <button type="submit">Siguiente</button>
@@ -338,15 +346,15 @@ const ClientForm = ({ onClose }) => {
                         <h2 className="step-title">Datos referencia 2</h2>
                         <label className="input-label">
                             Nombre completo:
-                            <input type="text" name="rf2_nombre_completo" value={formulario.rf2_nombre_completo} onChange={handleInputChange} />
+                            <input type="text" name="rf2_nombre_completo" value={formulario.rf2_nombre_completo} onChange={handleInputChange} style={{ borderColor: errors['rf2_nombre_completo'] ? 'red' : '#ccc' }} />
                         </label>
                         <label className="input-label">
                             Telefono:
-                            <input type="text" name="rf2_num_celular" id="number" value={formulario.rf2_num_celular} onChange={handleInputChange} />
+                            <input type="text" name="rf2_num_celular" id="number" value={formulario.rf2_num_celular} onChange={handleInputChange} style={{ borderColor: errors['rf2_num_celular'] ? 'red' : '#ccc' }} />
                         </label>
                         <label className="input-label">
                             Direccion:
-                            <input type="text" name="rf2_direccion" id="direccion" value={formulario.rf2_direccion} onChange={handleInputChange} />
+                            <input type="text" name="rf2_direccion" id="direccion" value={formulario.rf2_direccion} onChange={handleInputChange} style={{ borderColor: errors['rf2_direccion'] ? 'red' : '#ccc' }} />
                         </label>
                         <div className="button-container">
                             <button type="submit">Siguiente</button>

@@ -3,24 +3,32 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
-
 const useApiRequest = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const [token, setToken] = useState(null); // Estado para el token
+
+    // Usar useEffect para obtener el token del localStorage al montar el componente
+    useEffect(() => {
+        const storedToken = localStorage.getItem('token');
+        setToken(storedToken);
+    }, []);
+
     const apiRequest = async (url, method, body, successMessage, redirectUrl = '', delay = 5000) => {
         setIsLoading(true);
-
+        console.log(token);
         try {
             const response = await fetch(url, {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': token ? `Bearer ${token}` : '', // Incluir el token si existe
                 },
                 body: JSON.stringify(body),
             });
 
             const responseData = await response.json();
 
-            if (response.ok && (responseData.successful || responseData.data?.successful)) {
+            if (response.ok || (responseData.successful || responseData.data?.successful)) {
                 toast.success(
                     <div>
                         <p>{successMessage}</p>
@@ -70,7 +78,6 @@ const useApiRequest = () => {
         }
     };
 
-
     const apiRequest2 = async (url, method, successMessage, redirectUrl = '', delay = 5000) => {
         setIsLoading(true);
 
@@ -79,6 +86,7 @@ const useApiRequest = () => {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': token ? `Bearer ${token}` : '', // Incluir el token si existe
                 },
             });
 
@@ -162,6 +170,7 @@ const useApiRequest = () => {
 
         return { data, loading, error };
     };
+
     const useFetchPhoto = (photoUrl) => {
         const [photoData, setPhotoData] = useState(null);
         const [loading, setLoading] = useState(true);
@@ -195,12 +204,43 @@ const useApiRequest = () => {
 
         return { photoData, loading, error };
     };
+    const useFetchDataWithToken = (url, initialState = null) => {
+        const [data, setData] = useState(initialState);
+        const [loading, setLoading] = useState(true);
+        const [error, setError] = useState(false);
+
+        useEffect(() => {
+            const fetchData = async () => {
+                try {
+                    const token = localStorage.getItem('token');
+                    const response = await axios.get(url, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                        },
+                    });
+                    if (response.data && response.data.successful) {
+                        setData(response.data.data);
+                    } else {
+                        setError(true);
+                    }
+                } catch (error) {
+                    setError(true);
+                    console.error('Error obteniendo la data:', error);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            if (url) {
+                fetchData();
+            }
+        }, [url]);
+
+        return { data, loading, error };
+    };
 
 
-    return { apiRequest, apiRequest2, useFetchData, useFetchPhoto, isLoading };
-
+    return { apiRequest, apiRequest2, useFetchData, useFetchPhoto, useFetchDataWithToken, isLoading };
 };
-
-
 
 export default useApiRequest;

@@ -29,8 +29,8 @@ const CreditQuote = ({ onClose }) => {
         const queryString = `id=${formulario.id}&num_cuotas=${formulario.numCuotas}&fec_desembolso=${formulario.fecDesembolso}`;
 
         try {
-            const response = await axios.get(`http://192.168.20.23:3000/creditos/cotizacion_credito?${queryString}`);
-            if (response.data && response.data.successful) {
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER}/creditos/cotizacion_credito?${queryString}`);
+            if (response.data || response.data.successful) {
                 setCreditData(response.data.data);
                 setShowAlert(false);
                 setviewQuote(false);
@@ -48,13 +48,11 @@ const CreditQuote = ({ onClose }) => {
         setCreditData(null);
     }
     function formatCurrency(value) {
-        // Formatea el valor con el signo de pesos y separadores de miles
         return "$" + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
-
     const handleInputChange = (e) => {
         const { name, value, id } = e.target;
-        let cleanValue = value.replace(/[$,.]/g, ""); // Eliminar el signo $ y las comas
+        let cleanValue = value.replace(/[$,.]/g, "");
         if (id === 'number') {
             if (validateFields2(name, cleanValue, id)) {
                 setFormulario({

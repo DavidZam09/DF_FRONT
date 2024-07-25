@@ -1,16 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function SelectActiveEco({ onActiveEcoChange }) {
+function SelectActiveEco({ onActiveEcoChange, defaultParam, attribute }) {
     const [data, setData] = useState([]);
-    const [selectAtiveEco, setSselectAtiveEco] = useState('');
+    const [selectAtiveEco, setSselectAtiveEco] = useState(defaultParam);
     const [showInput, setShowInput] = useState(false);
     const [otherValue, setOtherValue] = useState('');
+    const [borderColor, setBorderColor] = useState(attribute);
 
     useEffect(() => {
         const fetchData = async () => {
+            const token = localStorage.getItem('token');
             try {
-                const response = await axios.get('http://192.168.20.23:3000/cliente_info/lista_actividad_eco');
+                const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER}/cliente_info/lista_actividad_eco`
+                    , {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                        },
+                    }
+                );
                 setData(response.data.data); // Acceder a response.data.data para obtener la lista de tipos de documento
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -19,7 +27,9 @@ function SelectActiveEco({ onActiveEcoChange }) {
 
         fetchData();
     }, []);
-
+    useEffect(() => {
+        setBorderColor(attribute);
+    }, [attribute]);
     const handleActiveEco = (e) => {
         const ActiveEco = e.target.value;
         setSselectAtiveEco(e.target.value);
@@ -39,14 +49,14 @@ function SelectActiveEco({ onActiveEcoChange }) {
 
     return (
         <div style={{ margin: '0 auto' }}>
-            {data.length > 0 ? ( // Verificar si data tiene elementos antes de renderizar
+            {data.length > 0 ? (
                 <div>
                     <label htmlFor="ActividadEconomica" style={{ display: 'block', marginBottom: '10px' }}>Actividad economica:</label>
                     <select
                         id="ActividadEconomica"
                         value={selectAtiveEco}
                         onChange={handleActiveEco}
-                        style={{ width: '100%', padding: '10px', borderRadius: '5px', marginBottom: '20px' }}
+                        style={{ width: '100%', padding: '10px', borderRadius: '5px', marginBottom: '20px', borderColor: borderColor }}
                     >
                         <option value="">Seleccionar Actividad economica</option>
                         {data.map((act) => (
@@ -55,7 +65,7 @@ function SelectActiveEco({ onActiveEcoChange }) {
                     </select>
                     {showInput && (
                         <div style={{ marginBottom: '20px' }}>
-                            <label htmlFor="otroInput" style={{ display: 'block', marginBottom: '10px' }}>Especificar otro sector económico:</label>
+                            <label htmlFor="otroInput" style={{ display: 'block', marginBottom: '10px', borderColor: borderColor }}>Especificar otro sector económico:</label>
                             <input
                                 type="text"
                                 id="otroInput"

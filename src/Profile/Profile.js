@@ -34,9 +34,9 @@ const Profile = ({ onClose }) => {
   }, []);
 
   const { data: client, loading: clientLoading, error: clientError } = useFetchData(
-    id ? `http://192.168.20.23:3000/cliente_info/lista_cliente_infoxcliente?id=${id}` : null
+    id ? `${process.env.REACT_APP_BACKEND_SERVER}/cliente_info/lista_cliente_infoxcliente?id=${id}` : null
   );
-  const photoUrl = `http://192.168.20.23:3000/documento/get_doc?doc=${client?.[0]?.foto_cliente}`;
+  const photoUrl = `${process.env.REACT_APP_BACKEND_SERVER}/documento/get_doc?doc=${client?.[0]?.foto_cliente}`;
   const { photoData, loading: photoLoading, error: photoError } = useFetchPhoto(photoUrl);
   const handleCapture = (field, blob) => {
     setClientData((prevData) => ({
@@ -90,7 +90,7 @@ const Profile = ({ onClose }) => {
         data.append(key, clientData[key]);
       });
 
-      const response = await axios.post('http://192.168.20.23:3000/cliente_info/input_cliente_info', data, {
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_SERVER}/cliente_info/input_cliente_info`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

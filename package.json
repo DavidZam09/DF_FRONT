@@ -13,6 +13,7 @@
     "axios": "^1.7.2",
     "browser-image-compression": "^2.0.2",
     "date-fns": "^3.6.0",
+    "env-cmd": "^10.1.0",
     "express": "^4.19.2",
     "http": "^0.0.1-security",
     "http-server": "^14.1.1",

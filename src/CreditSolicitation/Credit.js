@@ -60,7 +60,7 @@ const SolicitedCredit = ({ onClose }) => {
     };
 
     const handleConfirm = () => {
-        const url = 'http://192.168.20.23:3000/creditos/input_credito';
+        const url = `${process.env.REACT_APP_BACKEND_SERVER}/creditos/input_credito`;
         const method = 'POST';
         const body = formulario;
         const successMessage = 'Hola! Tu credito ha sido solicitado';

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import AlertMsg from '../Alert/Alert';
 import { FaMoneyCheckDollar } from "react-icons/fa6";
 import './SideBar.css';
-import { FaBars, FaHome, FaUser, FaHistory } from 'react-icons/fa';
+import { FaBars, FaHome, FaHistory } from 'react-icons/fa';
 import { IoIosLogOut } from 'react-icons/io';
 import ClientForm from '../DataFormClient/ClientForm';
 import logo from '../logo.svg';
@@ -34,9 +34,11 @@ const SidebarMenu = () => {
     };
     useEffect(() => {
         const statusClient = localStorage.getItem('id_cliente_tipo');
+
         const nameStatusClient = localStorage.getItem('nombre_tipo_cliente');
         if (statusClient) setStatus(statusClient);
         if (nameStatusClient) setNameStatus(nameStatusClient);
+
 
     }, []);
 
@@ -88,20 +90,33 @@ const SidebarMenu = () => {
             setLoading(true);
             try {
                 const clientId = localStorage.getItem('id');
+                const getToken = localStorage.getItem('token');
+                console.log("ID Y TOKEN " + clientId + " " + getToken);
                 if (clientId) {
-                    const response = await axios.get(`http://192.168.20.23:3000/cliente_info/lista_cliente_infoxcliente?id=${clientId}`);
-                    setClientExists(response.data.successful);
+                    const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER}/cliente_info/lista_cliente_infoxcliente?id=${clientId}`, {
+                        headers: {
+                            'Authorization': `Bearer ${getToken}`,
+                        },
+                    });
+
+                    // Verifica si la respuesta tiene la propiedad successful
+                    if (response.data && response.data.successful !== undefined) {
+                        setClientExists(response.data.successful);
+                    } else {
+                        setClientExists(false);
+                    }
                 }
             } catch (error) {
                 console.error('Error al verificar la existencia del cliente:', error);
                 alert('Error al verificar la existencia del cliente');
+                setClientExists(false); // Manejar el estado de clientExists en caso de error
             } finally {
                 setLoading(false);
             }
-
         };
         checkClientExists();
     }, []);
+
 
 
     const getContent = () => {

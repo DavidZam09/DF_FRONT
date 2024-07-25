@@ -3,6 +3,7 @@ import logo from '../logo.svg';
 import { NavLink, useNavigate } from 'react-router-dom';
 import './Login.css';
 import useApiRequest from '../Request/Request';
+console.log('Backend Server URL:', process.env.REACT_APP_BACKEND_SERVER);
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -14,7 +15,7 @@ const Login = () => {
 
     const handleConfirm = async (event) => {
         event.preventDefault();
-        const url = 'http://192.168.20.23:3000/clientes/login_cliente';
+        const url = `${process.env.REACT_APP_BACKEND_SERVER}/clientes/login_cliente`;
         const method = 'POST';
         const body = { email, password };
         const successMessage = 'Hola! Bienvenido';
@@ -22,14 +23,14 @@ const Login = () => {
         const result = await apiRequest(url, method, body, successMessage, '', 4000);
         if (result && result.successful) {
             const { token, cliente } = result;
-            localStorage.setItem('id', cliente.id.toString());
-            localStorage.setItem('id_cliente_tipo', cliente.id_cliente_tipo.toString());
+            localStorage.setItem('id', cliente.id_cliente);
+            localStorage.setItem('id_cliente_tipo', cliente.id_cliente_tipo);
             localStorage.setItem('cod_personal', cliente.cod_personal.toString());
             localStorage.setItem('nombre_tipo_cliente', cliente.nombre_tipo_cliente.toString());
             localStorage.setItem('token', token);
             setToken(token);
-            setUser(cliente);
-            console.log(cliente);
+            //setUser(cliente);
+            console.log("Este es el token " + token);
             setPassword('');
             setEmail('');
             navigate('/');
